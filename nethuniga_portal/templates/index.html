@@ -1,0 +1,988 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ne thuniga - Govt Exam Preparation Portal</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Mukta+Malar:wght@600;800&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ==========================================
+           1. CSS RESET & VARIABLES
+           ========================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        :root {
+            --gold-light: #fff099;
+            --gold-main: #d4af37;
+            --gold-dark: #aa771c;
+            --accent-blue: #00d2ff;
+            --text-light: #ffffff;
+            --text-gray: #cbd5e1;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(212, 175, 55, 0.25);
+        }
+
+        body {
+            background-color: #030008;
+            color: var(--text-light);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Moving Stars Canvas */
+        #starsCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            pointer-events: none;
+        }
+
+        /* Nebula BG */
+        .nebula {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(140px);
+            opacity: 0.25;
+            z-index: -1;
+            animation: moveNebula 18s ease-in-out infinite alternate;
+        }
+
+        .nebula-1 {
+            width: 450px;
+            height: 450px;
+            background: radial-gradient(circle, #7928ca, #ff0080);
+            top: -100px;
+            left: -100px;
+        }
+
+        .nebula-2 {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, #00d2ff, #3a7bd5);
+            bottom: -100px;
+            right: -100px;
+            animation-delay: -9s;
+        }
+
+        @keyframes moveNebula {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(80px, 50px) scale(1.2); }
+        }
+
+        /* ==========================================
+           2. MOUSE TRAIL DOT ANIMATION
+           ========================================== */
+        .cursor-dot {
+            width: 12px;
+            height: 12px;
+            background-color: var(--gold-light);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: transform 0.1s ease;
+            box-shadow: 0 0 12px var(--gold-main), 0 0 20px var(--gold-light);
+        }
+
+        .cursor-follower {
+            width: 36px;
+            height: 36px;
+            border: 2px solid rgba(212, 175, 55, 0.6);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9998;
+            transform: translate(-50%, -50%);
+            transition: transform 0.18s ease-out;
+        }
+
+        /* ==========================================
+           3. NAVBAR & METALLIC LOGO
+           ========================================== */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 7%;
+            background: rgba(3, 0, 8, 0.9);
+            backdrop-filter: blur(20px);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid var(--glass-border);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .sree-logo {
+            font-family: 'Mukta Malar', sans-serif;
+            font-size: 2.2rem;
+            font-weight: 800;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--gold-light), var(--gold-main) 50%, var(--gold-dark));
+            border: 3px solid #ffffff;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.7), inset 0 0 10px rgba(255, 255, 255, 0.8);
+            position: relative;
+        }
+
+        .sree-logo::after {
+            content: 'ஸ்ரீ'; 
+            background: linear-gradient(180deg, #fff 30%, #bbb 70%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .brand-name {
+            font-size: 1.6rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            background: linear-gradient(90deg, #ffffff, var(--gold-light), var(--gold-main));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* --- ANIMATED HAMBURGER MENU (3 LINES) --- */
+        .hamburger {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 32px;
+            height: 24px;
+            cursor: pointer;
+            z-index: 1002;
+            padding: 2px;
+        }
+
+        .hamburger span {
+            display: block;
+            height: 3px;
+            width: 100%;
+            background: linear-gradient(90deg, var(--gold-light), var(--gold-main));
+            border-radius: 3px;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 0 8px rgba(212, 175, 55, 0.5);
+        }
+
+        /* Animation transforming 3 lines into 'X' symbol */
+        .hamburger.active span:nth-child(1) {
+            transform: translateY(8.5px) rotate(45deg);
+        }
+
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.active span:nth-child(3) {
+            transform: translateY(-8.5px) rotate(-45deg);
+        }
+
+        /* DROPDOWN MENU */
+        .nav-links {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background: rgba(3, 0, 8, 0.95);
+            backdrop-filter: blur(25px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem 0;
+            gap: 1.5rem;
+            border-bottom: 1px solid var(--glass-border);
+            list-style: none;
+            
+            /* Hidden by default */
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-20px);
+            transition: all 0.4s ease-in-out;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.9);
+        }
+
+        /* Active Menu State */
+        .nav-links.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .nav-links a {
+            color: var(--text-gray);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: 0.3s;
+            letter-spacing: 1px;
+        }
+
+        .nav-links a:hover { 
+            color: var(--gold-light);
+            text-shadow: 0 0 10px var(--gold-main);
+        }
+
+        .btn-login-nav {
+            padding: 8px 22px;
+            border: 1px solid var(--gold-main);
+            border-radius: 20px;
+            color: var(--gold-light);
+            background: transparent;
+            cursor: pointer;
+            transition: 0.3s;
+            font-weight: 600;
+        }
+
+        .btn-login-nav:hover {
+            background: var(--gold-main);
+            color: #000;
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
+        }
+
+        /* ==========================================
+           4. FLOATING BOUNCING CART BUTTON
+           ========================================== */
+        .floating-bounce-cart {
+            position: fixed;
+            top: 110px;
+            right: 35px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--gold-light), var(--gold-main), var(--gold-dark));
+            color: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+            box-shadow: 0 0 25px rgba(212, 175, 55, 0.7), inset 0 0 10px rgba(255, 255, 255, 0.8);
+            border: 3px solid #ffffff;
+            z-index: 999;
+            cursor: pointer;
+            animation: continuousBounce 2s ease-in-out infinite;
+        }
+
+        @keyframes continuousBounce {
+            0%, 100% {
+                transform: translateY(0) scale(1);
+            }
+            50% {
+                transform: translateY(-15px) scale(1.05);
+                box-shadow: 0 10px 30px rgba(212, 175, 55, 0.8);
+            }
+        }
+
+        .cart-fall-anim {
+            animation: dropAndBounce 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+        }
+
+        @keyframes dropAndBounce {
+            0% { transform: translateY(-250px) scale(0.6); opacity: 0.3; }
+            70% { transform: translateY(15px) scale(1.1); opacity: 1; }
+            100% { transform: translateY(0) scale(1); }
+        }
+
+        .cart-badge-count {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #000;
+            color: var(--gold-light);
+            border: 2px solid var(--gold-main);
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        /* ==========================================
+           5. HERO SECTION & COUNSELOR AVATAR
+           ========================================== */
+        section { padding: 8rem 7% 4rem; }
+
+        .hero-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            min-height: calc(85vh - 100px);
+            gap: 2rem;
+        }
+
+        .hero-text { max-width: 650px; }
+
+        .hero-text h1 {
+            font-size: 3.2rem;
+            line-height: 1.2;
+            margin-bottom: 1.2rem;
+            background: linear-gradient(90deg, #ffffff, var(--gold-light), var(--gold-main));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-text p {
+            font-size: 1.1rem;
+            color: var(--text-gray);
+            margin-bottom: 2rem;
+            line-height: 1.7;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1.2rem;
+        }
+
+        .hero-telecaller-box {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .telecaller-circle {
+            width: 290px;
+            height: 290px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.15) 0%, rgba(3, 0, 8, 0.8) 70%);
+            border: 2px solid var(--gold-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            box-shadow: 0 0 40px rgba(212, 175, 55, 0.3);
+            animation: pulseCircle 4s ease-in-out infinite alternate, subtleFloating 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes subtleFloating {
+            0% { transform: translateY(0px); }
+            100% { transform: translateY(-8px); }
+        }
+
+        @keyframes pulseCircle {
+            0% { box-shadow: 0 0 30px rgba(212, 175, 55, 0.3); border-color: rgba(212, 175, 55, 0.4); }
+            100% { box-shadow: 0 0 60px rgba(0, 210, 255, 0.5); border-color: rgba(0, 210, 255, 0.7); }
+        }
+
+        .telecaller-avatar {
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
+            object-fit: contain;
+            filter: drop-shadow(0 0 15px rgba(212, 175, 55, 0.6));
+        }
+
+        .live-tag {
+            position: absolute;
+            bottom: -10px;
+            background: rgba(3, 0, 8, 0.9);
+            border: 1.5px solid var(--gold-main);
+            padding: 6px 18px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .live-dot {
+            width: 10px; height: 10px;
+            background: #00ff88;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #00ff88;
+        }
+
+        .btn-gold {
+            padding: 12px 32px;
+            background: linear-gradient(45deg, var(--gold-dark), var(--gold-main), var(--gold-light));
+            border: none;
+            border-radius: 30px;
+            color: #030008;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            box-shadow: 0 5px 25px rgba(212, 175, 55, 0.4);
+            transition: 0.3s ease;
+            text-decoration: none;
+        }
+
+        .btn-gold:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 35px rgba(212, 175, 55, 0.8);
+        }
+
+        .btn-outline {
+            padding: 12px 32px;
+            background: transparent;
+            border: 1px solid var(--glass-border);
+            border-radius: 30px;
+            color: #fff;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        .btn-outline:hover { border-color: var(--gold-main); color: var(--gold-light); }
+
+        /* ==========================================
+           6. YOUTUBE VIDEOS SECTION
+           ========================================== */
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            border-radius: 12px;
+            border: 1px solid var(--glass-border);
+            margin-bottom: 1rem;
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+        /* ==========================================
+           7. SEARCH & EXAM CATEGORIES BAR
+           ========================================== */
+        .search-section {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            padding: 2rem;
+            border-radius: 20px;
+            backdrop-filter: blur(15px);
+            margin-bottom: 3rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .search-box {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 1rem 1.5rem;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            color: #fff;
+            outline: none;
+        }
+
+        .search-input:focus { border-color: var(--gold-main); }
+
+        .category-chips {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .chip {
+            padding: 8px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .chip.active, .chip:hover {
+            background: var(--gold-main);
+            color: #000;
+            font-weight: 600;
+        }
+
+        /* ==========================================
+           8. PDF MATERIALS GRID
+           ========================================== */
+        .section-title {
+            font-size: 2.2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            background: linear-gradient(90deg, #fff, var(--gold-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .materials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .pdf-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 1.8rem;
+            backdrop-filter: blur(15px);
+            transition: 0.3s;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .pdf-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--gold-main);
+            box-shadow: 0 10px 30px rgba(0, 210, 255, 0.2);
+        }
+
+        .pdf-tag {
+            font-size: 0.75rem;
+            color: var(--accent-blue);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.8rem;
+        }
+
+        .pdf-card h4 { font-size: 1.2rem; margin-bottom: 0.8rem; }
+        .pdf-card p { font-size: 0.85rem; color: var(--text-gray); margin-bottom: 1.5rem; }
+
+        .btn-download-pdf {
+            width: 100%;
+            padding: 10px;
+            background: rgba(212, 175, 55, 0.15);
+            border: 1px solid var(--gold-main);
+            color: var(--gold-light);
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.3s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-download-pdf:hover {
+            background: var(--gold-main);
+            color: #000;
+        }
+
+        /* ==========================================
+           9. MOCK TEST SECTION
+           ========================================== */
+        .test-card {
+            background: linear-gradient(135deg, rgba(212,175,55,0.05), rgba(0,0,0,0.6));
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        /* ==========================================
+           10. LOGIN / SIGNUP MODAL
+           ========================================== */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(10px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+        .modal-content {
+            background: #0d061f;
+            border: 1px solid var(--gold-main);
+            padding: 2.5rem;
+            border-radius: 24px;
+            max-width: 420px;
+            width: 90%;
+            text-align: center;
+            position: relative;
+        }
+
+        .close-modal { position: absolute; top: 15px; right: 20px; font-size: 1.8rem; color: var(--text-gray); cursor: pointer; }
+
+        .modal-input {
+            width: 100%;
+            padding: 0.9rem;
+            margin-bottom: 1rem;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 10px;
+            color: #fff;
+        }
+
+        @media (max-width: 992px) {
+            .hero-container { flex-direction: column; text-align: center; }
+            .hero-buttons { justify-content: center; }
+            .test-card { flex-direction: column; gap: 1rem; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Background Stars & Nebulas -->
+    <canvas id="starsCanvas"></canvas>
+    <div class="nebula nebula-1"></div>
+    <div class="nebula nebula-2"></div>
+
+    <!-- Mouse Tracking Dots -->
+    <div class="cursor-dot" id="cursorDot"></div>
+    <div class="cursor-follower" id="cursorFollower"></div>
+
+    <!-- FLOATING BOUNCING CART BUTTON -->
+    <div class="floating-bounce-cart" id="floatingCart" onclick="openPaymentModal()">
+        🛒
+        <div class="cart-badge-count" id="cartCount">0</div>
+    </div>
+
+    <!-- HEADER / NAVIGATION -->
+    <header>
+        <div class="logo-container">
+            <div class="sree-logo"></div>
+            <div class="brand-name">NE THUNIGA</div>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 1.2rem;">
+            <button class="btn-login-nav" onclick="openLoginModal()">Student Login</button>
+            
+            <!-- 3-LINE ANIMATED HAMBURGER ICON -->
+            <div class="hamburger" id="hamburger" onclick="toggleMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+
+        <!-- DROPDOWN MENU LINKS -->
+        <ul class="nav-links" id="navLinks">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#videos">Videos</a></li>
+            <li><a href="#materials">PDF Materials</a></li>
+            <li><a href="#courses">Paid Courses</a></li>
+            <li><a href="#mocktests">Mock Tests</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section id="home">
+        <div class="hero-container">
+            <div class="hero-text">
+                <h1>Achieve Your Dream Govt Job With Nethuniga!</h1>
+                <p>Exclusive PDF notes, YouTube classes, and mock tests for TNPSC (Group 1, 2, 4), SSC, Railway (RRB), and Banking exams.</p>
+                <div class="hero-buttons">
+                    <a href="#materials" class="btn-gold">Download PDFs</a>
+                    <a href="#videos" class="btn-outline">Watch Classes</a>
+                </div>
+            </div>
+
+            <!-- Telecaller / Counselor Avatar -->
+            <div class="hero-telecaller-box">
+                <div class="telecaller-circle">
+                    <img class="telecaller-avatar" src="{% static 'images/robot.jpeg' %}" alt="Avatar">                    <div class="live-tag">
+                        <div class="live-dot"></div>
+                        <span>Tutor Online</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- YOUTUBE VIDEOS SECTION -->
+    <section id="videos">
+        <h2 class="section-title">Latest YouTube Classes</h2>
+        <div class="materials-grid">
+            <div class="pdf-card">
+                <div class="video-container">
+                    <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" allowfullscreen></iframe>
+                </div>
+                <h4>TNPSC Group 4 - Tamil Preparation Strategy</h4>
+                <p>Learn top tips and syllabus breakdown directly from Nethuniga YouTube Channel.</p>
+            </div>
+
+            <div class="pdf-card">
+                <div class="video-container">
+                    <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" allowfullscreen></iframe>
+                </div>
+                <h4>Maths & Aptitude Short Tricks</h4>
+                <p>Solve RRB & SSC Quantitative Aptitude questions in under 30 seconds!</p>
+            </div>
+
+            <div class="pdf-card">
+                <div class="video-container">
+                    <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" allowfullscreen></iframe>
+                </div>
+                <h4>Current Affairs Discussion</h4>
+                <p>Important monthly current affairs for all upcoming government exams.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- SEARCH & EXAM FILTER SECTION (PDFs) -->
+    <section id="materials">
+        <h2 class="section-title">PDF Materials</h2>
+        
+        <div class="search-section">
+            <div class="search-box">
+                <input type="text" class="search-input" placeholder="Search PDF title or subject (e.g., Polity, History)...">
+                <button class="btn-gold">Search</button>
+            </div>
+            <div class="category-chips">
+                <span class="chip active">All Exams</span>
+                <span class="chip">TNPSC Group 4</span>
+                <span class="chip">TNPSC Group 2/2A</span>
+                <span class="chip">SSC CGL / CHSL</span>
+                <span class="chip">RRB Railway</span>
+                <span class="chip">Banking</span>
+            </div>
+        </div>
+
+        <!-- PDF MATERIALS GRID -->
+        <div class="materials-grid">
+            <div class="pdf-card">
+                <div>
+                    <span class="pdf-tag">TNPSC • Tamil</span>
+                    <h4>6th - 10th Tamil Important Questions</h4>
+                    <p>Complete Tamil Q&A collection for TNPSC Group 4 exam (PDF).</p>
+                </div>
+                <button class="btn-download-pdf" onclick="openLoginModal()">📥 Download PDF</button>
+            </div>
+
+            <div class="pdf-card">
+                <div>
+                    <span class="pdf-tag">SSC & RRB • Maths</span>
+                    <h4>Aptitude & Reasoning Short Tricks</h4>
+                    <p>Easy ways and formulas to solve math problems in 30 seconds.</p>
+                </div>
+                <button class="btn-download-pdf" onclick="openLoginModal()">📥 Download PDF</button>
+            </div>
+
+            <div class="pdf-card">
+                <div>
+                    <span class="pdf-tag">Current Affairs</span>
+                    <h4>Monthly Current Affairs Digest</h4>
+                    <p>Monthly current affairs compilation for all competitive exams.</p>
+                </div>
+                <button class="btn-download-pdf" onclick="openLoginModal()">📥 Download PDF</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- PAID COURSES SECTION -->
+    <section id="courses">
+        <h2 class="section-title">Premium Courses</h2>
+        <div class="materials-grid">
+            <div class="pdf-card" style="border-color: var(--gold-main);">
+                <div>
+                    <span class="pdf-tag" style="color: var(--gold-light);">LIVE + RECORDED</span>
+                    <h4>TNPSC Group 4 Master Class</h4>
+                    <p>Daily live classes, 50+ mock tests, and printed study books.</p>
+                    <h3 style="color: var(--gold-light); margin: 1rem 0;">₹1,999 <span style="text-decoration: line-through; font-size: 0.9rem; color: #888;">₹4,999</span></h3>
+                </div>
+                <button class="btn-gold" onclick="addToCart()">Enroll Now</button>
+            </div>
+
+            <div class="pdf-card" style="border-color: var(--gold-main);">
+                <div>
+                    <span class="pdf-tag" style="color: var(--gold-light);">FULL BATCH</span>
+                    <h4>SSC & Railway (RRB) Complete Course</h4>
+                    <p>Complete coaching for Maths, Reasoning, English & General Awareness.</p>
+                    <h3 style="color: var(--gold-light); margin: 1rem 0;">₹2,499 <span style="text-decoration: line-through; font-size: 0.9rem; color: #888;">₹5,999</span></h3>
+                </div>
+                <button class="btn-gold" onclick="addToCart()">Enroll Now</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- MOCK TEST SECTION -->
+    <section id="mocktests">
+        <h2 class="section-title">Online Mock Tests</h2>
+        <div class="test-card">
+            <div>
+                <h4>TNPSC Group 4 Full Length Mock Test 01</h4>
+                <p style="color: var(--text-gray); font-size: 0.9rem;">200 Questions • 3 Hours • Tamil & English</p>
+            </div>
+            <button class="btn-outline" onclick="alert('Starting Test...');">Start Test</button>
+        </div>
+        <div class="test-card">
+            <div>
+                <h4>SSC CGL Tier-1 Mathematics Topic Test</h4>
+                <p style="color: var(--text-gray); font-size: 0.9rem;">25 Questions • 30 Mins • Instant Rank List</p>
+            </div>
+            <button class="btn-outline" onclick="alert('Starting Test...');">Start Test</button>
+        </div>
+    </section>
+
+    <!-- CONTACT SECTION -->
+    <section id="contact">
+        <h2 class="section-title">Get In Touch</h2>
+        <div style="background: var(--glass-bg); border: 1px solid var(--glass-border); padding: 3rem; border-radius: 20px; max-width: 650px; margin: 0 auto; backdrop-filter: blur(15px);">
+            <form style="display: flex; flex-direction: column; gap: 1.2rem;" onsubmit="event.preventDefault(); alert('Thank you! Message sent.');">
+                <input type="text" placeholder="Full Name" style="padding: 1rem; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; color: #fff;" required>
+                <input type="email" placeholder="Email Address" style="padding: 1rem; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; color: #fff;" required>
+                <textarea rows="4" placeholder="Your Message" style="padding: 1rem; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; color: #fff;" required></textarea>
+                <button type="submit" class="btn-gold">Send Inquiry</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- LOGIN / SIGNUP MODAL -->
+    <div class="modal-overlay" id="loginModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeLoginModal()">&times;</span>
+            <h3 style="color: var(--gold-light); margin-bottom: 1.5rem;">Student Login</h3>
+            <form onsubmit="event.preventDefault(); alert('Login Successful!'); closeLoginModal();">
+                <input type="email" class="modal-input" placeholder="Email" required>
+                <input type="password" class="modal-input" placeholder="Password" required>
+                <button type="submit" class="btn-gold" style="width: 100%;">Login</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- PAYMENT MODAL -->
+    <div class="modal-overlay" id="paymentModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closePaymentModal()">&times;</span>
+            <h3 style="color: var(--gold-light); margin-bottom: 1rem;">Secure Checkout</h3>
+            <p style="color: var(--text-gray); margin-bottom: 1.5rem;">Pay securely using:</p>
+            <div style="background: rgba(255,255,255,0.05); padding: 1.2rem; border-radius: 12px; margin-bottom: 1.5rem;">
+                <p style="color: var(--gold-main);">UPI (GPay / PhonePe) | Credit & Debit Cards</p>
+            </div>
+            <button class="btn-gold" style="width: 100%;" onclick="alert('Redirecting to Razorpay Gateway...'); closePaymentModal();">Proceed to Pay</button>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer style="text-align: center; padding: 2.5rem; background: rgba(3, 0, 8, 0.95); border-top: 1px solid var(--glass-border); color: var(--text-gray);">
+        <p>&copy; Nethuniga Coaching Academy. All Rights Reserved.</p>
+    </footer>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        // --- 1. Canvas Stars Animation ---
+        const canvas = document.getElementById('starsCanvas');
+        const ctx = canvas.getContext('2d');
+        function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        const stars = [];
+        for (let i = 0; i < 150; i++) {
+            stars.push({
+                x: Math.random() * canvas.width, 
+                y: Math.random() * canvas.height,
+                radius: Math.random() * 1.8 + 0.5, 
+                speedX: (Math.random() - 0.5) * 0.5,
+                speedY: Math.random() * 0.4 + 0.2, 
+                opacity: Math.random()
+            });
+        }
+
+        function drawStars() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            stars.forEach(star => {
+                ctx.beginPath();
+                ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(255, 255, 255, ${star.opacity})`;
+                ctx.fill();
+                star.y += star.speedY; star.x += star.speedX;
+                if (star.y > canvas.height) star.y = 0;
+            });
+            requestAnimationFrame(drawStars);
+        }
+        drawStars();
+
+        // --- 2. Cursor Trail ---
+        const cursorDot = document.getElementById('cursorDot');
+        const cursorFollower = document.getElementById('cursorFollower');
+        let mouseX = 0, mouseY = 0, followerX = 0, followerY = 0;
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX; mouseY = e.clientY;
+            cursorDot.style.left = `${mouseX}px`; cursorDot.style.top = `${mouseY}px`;
+        });
+
+        function animateCursor() {
+            followerX += (mouseX - followerX) * 0.15;
+            followerY += (mouseY - followerY) * 0.15;
+            cursorFollower.style.left = `${followerX}px`; cursorFollower.style.top = `${mouseY}px`;
+            requestAnimationFrame(animateCursor);
+        }
+        animateCursor();
+
+        // --- 3. Shopping Cart & Modal Logic ---
+        let itemsInCart = 0;
+        const cartBadge = document.getElementById('cartCount');
+        const floatingCart = document.getElementById('floatingCart');
+
+        function addToCart() {
+            itemsInCart++;
+            cartBadge.innerText = itemsInCart;
+            floatingCart.classList.add('cart-fall-anim');
+            setTimeout(() => floatingCart.classList.remove('cart-fall-anim'), 700);
+        }
+
+        function openLoginModal() { document.getElementById('loginModal').style.display = 'flex'; }
+        function closeLoginModal() { document.getElementById('loginModal').style.display = 'none'; }
+        function openPaymentModal() { document.getElementById('paymentModal').style.display = 'flex'; }
+        function closePaymentModal() { document.getElementById('paymentModal').style.display = 'none'; }
+
+        // --- 4. Animated Hamburger Menu Toggle Logic ---
+        function toggleMenu() {
+            const hamburger = document.getElementById('hamburger');
+            const navLinks = document.getElementById('navLinks');
+            hamburger.classList.toggle('active');
+            navLinks.classList.toggle('active');
+        }
+
+        // Close menu automatically when clicking any link inside menu
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                const hamburger = document.getElementById('hamburger');
+                const navLinks = document.getElementById('navLinks');
+                if(navLinks.classList.contains('active')) {
+                    hamburger.classList.remove('active');
+                    navLinks.classList.remove('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

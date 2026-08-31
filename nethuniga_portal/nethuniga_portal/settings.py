@@ -126,6 +126,15 @@ STATICFILES_DIRS = [
     STATIC_ROOT = BASE_DIR / 'staticfiles'
 ]
 
+
+STORAGES = {
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
+
+
+
 # Fix for Older MariaDB (10.4) Compatibility
 from django.db.backends.base.base import BaseDatabaseWrapper
 from django.db.backends.mysql.features import DatabaseFeatures

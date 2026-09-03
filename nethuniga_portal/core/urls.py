@@ -7,5 +7,4 @@ urlpatterns = [
     path('pdfs/', pdf_notes, name='pdf_notes'),
     path('videos/', videos, name='videos'),
     path('about/', about, name='about'),
-    path('contact/', contact, name='contact'),
 ]

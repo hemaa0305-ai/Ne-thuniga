@@ -32,11 +32,12 @@
             --glass-border: rgba(212, 175, 55, 0.25);
         }
 
-        body {
+        html, body {
+            width: 100%;
+            overflow-x: hidden; /* Prevents unwanted horizontal scrolling on mobile */
             background-color: #030008;
             color: var(--text-light);
             min-height: 100vh;
-            overflow-x: hidden;
             position: relative;
         }
 
@@ -62,64 +63,62 @@
         }
 
         .nebula-1 {
-            width: 450px;
-            height: 450px;
+            width: 300px;
+            height: 300px;
             background: radial-gradient(circle, #7928ca, #ff0080);
-            top: -100px;
-            left: -100px;
+            top: -50px;
+            left: -50px;
         }
 
         .nebula-2 {
-            width: 400px;
-            height: 400px;
+            width: 300px;
+            height: 300px;
             background: radial-gradient(circle, #00d2ff, #3a7bd5);
-            bottom: -100px;
-            right: -100px;
+            bottom: -50px;
+            right: -50px;
             animation-delay: -9s;
         }
 
         @keyframes moveNebula {
             0% { transform: translate(0, 0) scale(1); }
-            100% { transform: translate(80px, 50px) scale(1.2); }
+            100% { transform: translate(40px, 30px) scale(1.1); }
+        }
+
+        /* Cursor Customization (Enabled only on large screens) */
+        @media (min-width: 992px) {
+            .cursor-dot {
+                width: 12px;
+                height: 12px;
+                background-color: var(--gold-light);
+                border-radius: 50%;
+                position: fixed;
+                pointer-events: none;
+                z-index: 9999;
+                transform: translate(-50%, -50%);
+                box-shadow: 0 0 12px var(--gold-main), 0 0 20px var(--gold-light);
+            }
+
+            .cursor-follower {
+                width: 36px;
+                height: 36px;
+                border: 2px solid rgba(212, 175, 55, 0.6);
+                border-radius: 50%;
+                position: fixed;
+                pointer-events: none;
+                z-index: 9998;
+                transform: translate(-50%, -50%);
+            }
         }
 
         /* ==========================================
-           2. MOUSE TRAIL DOT ANIMATION
-           ========================================== */
-        .cursor-dot {
-            width: 12px;
-            height: 12px;
-            background-color: var(--gold-light);
-            border-radius: 50%;
-            position: fixed;
-            pointer-events: none;
-            z-index: 9999;
-            transform: translate(-50%, -50%);
-            transition: transform 0.1s ease;
-            box-shadow: 0 0 12px var(--gold-main), 0 0 20px var(--gold-light);
-        }
-
-        .cursor-follower {
-            width: 36px;
-            height: 36px;
-            border: 2px solid rgba(212, 175, 55, 0.6);
-            border-radius: 50%;
-            position: fixed;
-            pointer-events: none;
-            z-index: 9998;
-            transform: translate(-50%, -50%);
-            transition: transform 0.18s ease-out;
-        }
-
-        /* ==========================================
-           3. NAVBAR & METALLIC LOGO
+           2. NAVBAR & METALLIC LOGO
            ========================================== */
         header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 1rem 7%;
-            background: rgba(3, 0, 8, 0.9);
+            padding: 1rem 5%;
+            background: rgba(3, 0, 8, 0.95);
             backdrop-filter: blur(20px);
             position: fixed;
             width: 100%;
@@ -132,22 +131,22 @@
         .logo-container {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 10px;
         }
 
         .sree-logo {
             font-family: 'Mukta Malar', sans-serif;
-            font-size: 2.2rem;
+            font-size: 1.8rem;
             font-weight: 800;
-            width: 60px;
-            height: 60px;
+            width: 48px;
+            height: 48px;
             display: flex;
             justify-content: center;
             align-items: center;
             border-radius: 50%;
             background: linear-gradient(135deg, var(--gold-light), var(--gold-main) 50%, var(--gold-dark));
-            border: 3px solid #ffffff;
-            box-shadow: 0 0 20px rgba(212, 175, 55, 0.7), inset 0 0 10px rgba(255, 255, 255, 0.8);
+            border: 2px solid #ffffff;
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.7);
             position: relative;
         }
 
@@ -159,24 +158,22 @@
         }
 
         .brand-name {
-            font-size: 1.6rem;
+            font-size: 1.3rem;
             font-weight: 700;
-            letter-spacing: 2px;
+            letter-spacing: 1px;
             background: linear-gradient(90deg, #ffffff, var(--gold-light), var(--gold-main));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
-        /* --- ANIMATED HAMBURGER MENU (3 LINES) --- */
         .hamburger {
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            width: 32px;
-            height: 24px;
+            width: 28px;
+            height: 20px;
             cursor: pointer;
             z-index: 1002;
-            padding: 2px;
         }
 
         .hamburger span {
@@ -186,29 +183,18 @@
             background: linear-gradient(90deg, var(--gold-light), var(--gold-main));
             border-radius: 3px;
             transition: all 0.3s ease-in-out;
-            box-shadow: 0 0 8px rgba(212, 175, 55, 0.5);
         }
 
-        /* Animation transforming 3 lines into 'X' symbol */
-        .hamburger.active span:nth-child(1) {
-            transform: translateY(8.5px) rotate(45deg);
-        }
+        .hamburger.active span:nth-child(1) { transform: translateY(8.5px) rotate(45deg); }
+        .hamburger.active span:nth-child(2) { opacity: 0; }
+        .hamburger.active span:nth-child(3) { transform: translateY(-8.5px) rotate(-45deg); }
 
-        .hamburger.active span:nth-child(2) {
-            opacity: 0;
-        }
-
-        .hamburger.active span:nth-child(3) {
-            transform: translateY(-8.5px) rotate(-45deg);
-        }
-
-        /* DROPDOWN MENU */
         .nav-links {
             position: absolute;
             top: 100%;
             left: 0;
             width: 100%;
-            background: rgba(3, 0, 8, 0.95);
+            background: rgba(3, 0, 8, 0.98);
             backdrop-filter: blur(25px);
             display: flex;
             flex-direction: column;
@@ -217,16 +203,13 @@
             gap: 1.5rem;
             border-bottom: 1px solid var(--glass-border);
             list-style: none;
-            
-            /* Hidden by default */
             opacity: 0;
             visibility: hidden;
             transform: translateY(-20px);
-            transition: all 0.4s ease-in-out;
+            transition: all 0.3s ease-in-out;
             box-shadow: 0 15px 30px rgba(0, 0, 0, 0.9);
         }
 
-        /* Active Menu State */
         .nav-links.active {
             opacity: 1;
             visibility: visible;
@@ -239,137 +222,105 @@
             font-weight: 600;
             font-size: 1.1rem;
             transition: 0.3s;
-            letter-spacing: 1px;
         }
 
-        .nav-links a:hover { 
-            color: var(--gold-light);
-            text-shadow: 0 0 10px var(--gold-main);
-        }
+        .nav-links a:hover { color: var(--gold-light); }
 
         .btn-login-nav {
-            padding: 8px 22px;
+            padding: 6px 16px;
             border: 1px solid var(--gold-main);
             border-radius: 20px;
             color: var(--gold-light);
             background: transparent;
             cursor: pointer;
-            transition: 0.3s;
             font-weight: 600;
+            font-size: 0.85rem;
         }
 
-        .btn-login-nav:hover {
-            background: var(--gold-main);
-            color: #000;
-            box-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
-        }
-
-        /* ==========================================
-           4. FLOATING BOUNCING CART BUTTON
-           ========================================== */
+        /* Floating Cart */
         .floating-bounce-cart {
             position: fixed;
-            top: 110px;
-            right: 35px;
-            width: 60px;
-            height: 60px;
+            bottom: 25px;
+            right: 20px;
+            width: 55px;
+            height: 55px;
             border-radius: 50%;
             background: linear-gradient(135deg, var(--gold-light), var(--gold-main), var(--gold-dark));
             color: #000;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 1.5rem;
-            box-shadow: 0 0 25px rgba(212, 175, 55, 0.7), inset 0 0 10px rgba(255, 255, 255, 0.8);
-            border: 3px solid #ffffff;
+            font-size: 1.4rem;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.7);
+            border: 2px solid #ffffff;
             z-index: 999;
             cursor: pointer;
             animation: continuousBounce 2s ease-in-out infinite;
         }
 
         @keyframes continuousBounce {
-            0%, 100% {
-                transform: translateY(0) scale(1);
-            }
-            50% {
-                transform: translateY(-15px) scale(1.05);
-                box-shadow: 0 10px 30px rgba(212, 175, 55, 0.8);
-            }
-        }
-
-        .cart-fall-anim {
-            animation: dropAndBounce 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
-        }
-
-        @keyframes dropAndBounce {
-            0% { transform: translateY(-250px) scale(0.6); opacity: 0.3; }
-            70% { transform: translateY(15px) scale(1.1); opacity: 1; }
-            100% { transform: translateY(0) scale(1); }
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
         }
 
         .cart-badge-count {
             position: absolute;
-            top: -5px;
-            right: -5px;
+            top: -4px;
+            right: -4px;
             background: #000;
             color: var(--gold-light);
             border: 2px solid var(--gold-main);
-            width: 24px;
-            height: 24px;
+            width: 22px;
+            height: 22px;
             border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             font-weight: 700;
         }
 
         /* ==========================================
-           5. HERO SECTION & COUNSELOR AVATAR
+           3. SECTIONS & GENERAL RESPONSIVE GRID
            ========================================== */
-        section { padding: 8rem 7% 4rem; }
+        section { padding: 6rem 5% 3rem; }
 
         .hero-container {
             display: flex;
+            flex-direction: column;
             align-items: center;
-            justify-content: space-between;
-            min-height: calc(85vh - 100px);
-            gap: 2rem;
+            justify-content: center;
+            text-align: center;
+            gap: 2.5rem;
+            min-height: calc(80vh - 80px);
         }
 
-        .hero-text { max-width: 650px; }
-
         .hero-text h1 {
-            font-size: 3.2rem;
-            line-height: 1.2;
-            margin-bottom: 1.2rem;
+            font-size: 2.2rem;
+            line-height: 1.3;
+            margin-bottom: 1rem;
             background: linear-gradient(90deg, #ffffff, var(--gold-light), var(--gold-main));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
         .hero-text p {
-            font-size: 1.1rem;
+            font-size: 0.95rem;
             color: var(--text-gray);
-            margin-bottom: 2rem;
-            line-height: 1.7;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
         }
 
         .hero-buttons {
             display: flex;
-            gap: 1.2rem;
-        }
-
-        .hero-telecaller-box {
-            position: relative;
-            display: flex;
+            gap: 1rem;
             justify-content: center;
-            align-items: center;
+            flex-wrap: wrap;
         }
 
         .telecaller-circle {
-            width: 290px;
-            height: 290px;
+            width: 220px;
+            height: 220px;
             border-radius: 50%;
             background: radial-gradient(circle, rgba(212, 175, 55, 0.15) 0%, rgba(3, 0, 8, 0.8) 70%);
             border: 2px solid var(--gold-main);
@@ -377,204 +328,178 @@
             justify-content: center;
             align-items: center;
             position: relative;
-            box-shadow: 0 0 40px rgba(212, 175, 55, 0.3);
-            animation: pulseCircle 4s ease-in-out infinite alternate, subtleFloating 3s ease-in-out infinite alternate;
-        }
-
-        @keyframes subtleFloating {
-            0% { transform: translateY(0px); }
-            100% { transform: translateY(-8px); }
-        }
-
-        @keyframes pulseCircle {
-            0% { box-shadow: 0 0 30px rgba(212, 175, 55, 0.3); border-color: rgba(212, 175, 55, 0.4); }
-            100% { box-shadow: 0 0 60px rgba(0, 210, 255, 0.5); border-color: rgba(0, 210, 255, 0.7); }
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.3);
         }
 
         .telecaller-avatar {
-            width: 250px;
-            height: 250px;
+            width: 190px;
+            height: 190px;
             border-radius: 50%;
             object-fit: contain;
-            filter: drop-shadow(0 0 15px rgba(212, 175, 55, 0.6));
         }
 
         .live-tag {
             position: absolute;
-            bottom: -10px;
-            background: rgba(3, 0, 8, 0.9);
-            border: 1.5px solid var(--gold-main);
-            padding: 6px 18px;
+            bottom: -8px;
+            background: rgba(3, 0, 8, 0.95);
+            border: 1px solid var(--gold-main);
+            padding: 4px 14px;
             border-radius: 20px;
             display: flex;
             align-items: center;
-            gap: 8px;
-            font-size: 0.85rem;
+            gap: 6px;
+            font-size: 0.75rem;
             font-weight: 600;
         }
 
         .live-dot {
-            width: 10px; height: 10px;
+            width: 8px; height: 8px;
             background: #00ff88;
             border-radius: 50%;
-            box-shadow: 0 0 10px #00ff88;
+            box-shadow: 0 0 8px #00ff88;
         }
 
         .btn-gold {
-            padding: 12px 32px;
+            padding: 10px 24px;
             background: linear-gradient(45deg, var(--gold-dark), var(--gold-main), var(--gold-light));
             border: none;
-            border-radius: 30px;
+            border-radius: 25px;
             color: #030008;
             font-weight: 700;
-            font-size: 0.95rem;
+            font-size: 0.88rem;
             cursor: pointer;
-            box-shadow: 0 5px 25px rgba(212, 175, 55, 0.4);
-            transition: 0.3s ease;
             text-decoration: none;
-        }
-
-        .btn-gold:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 35px rgba(212, 175, 55, 0.8);
+            display: inline-block;
         }
 
         .btn-outline {
-            padding: 12px 32px;
+            padding: 10px 24px;
             background: transparent;
             border: 1px solid var(--glass-border);
-            border-radius: 30px;
+            border-radius: 25px;
             color: #fff;
             font-weight: 600;
-            cursor: pointer;
+            font-size: 0.88rem;
             text-decoration: none;
-            transition: 0.3s;
+            display: inline-block;
         }
 
-        .btn-outline:hover { border-color: var(--gold-main); color: var(--gold-light); }
-
-        /* ==========================================
-           6. YOUTUBE VIDEOS SECTION
-           ========================================== */
-        .video-container {
-            position: relative;
-            padding-bottom: 56.25%;
-            height: 0;
-            overflow: hidden;
-            border-radius: 12px;
-            border: 1px solid var(--glass-border);
-            margin-bottom: 1rem;
-        }
-
-        .video-container iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border: 0;
-        }
-
-        /* ==========================================
-           7. SEARCH & EXAM CATEGORIES BAR
-           ========================================== */
-        .search-section {
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            padding: 2rem;
-            border-radius: 20px;
-            backdrop-filter: blur(15px);
-            margin-bottom: 3rem;
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-        }
-
-        .search-box {
-            display: flex;
-            gap: 1rem;
-        }
-
-        .search-input {
-            flex: 1;
-            padding: 1rem 1.5rem;
-            background: rgba(0, 0, 0, 0.4);
-            border: 1px solid var(--glass-border);
-            border-radius: 12px;
-            color: #fff;
-            outline: none;
-        }
-
-        .search-input:focus { border-color: var(--gold-main); }
-
-        .category-chips {
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
-        }
-
-        .chip {
-            padding: 8px 20px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            font-size: 0.85rem;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        .chip.active, .chip:hover {
-            background: var(--gold-main);
-            color: #000;
-            font-weight: 600;
-        }
-
-        /* ==========================================
-           8. PDF MATERIALS GRID
-           ========================================== */
         .section-title {
-            font-size: 2.2rem;
-            margin-bottom: 2rem;
+            font-size: 1.8rem;
+            margin-bottom: 1.8rem;
             text-align: center;
             background: linear-gradient(90deg, #fff, var(--gold-light));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
+        /* ==========================================
+           4. RESPONSIVE SEARCH & FILTERS
+           ========================================== */
+        .search-section {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            padding: 1.2rem;
+            border-radius: 16px;
+            backdrop-filter: blur(15px);
+            margin-bottom: 2rem;
+            width: 100%;
+        }
+
+        .search-box {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
+            color: #fff;
+            outline: none;
+            font-size: 0.9rem;
+        }
+
+        .search-box .btn-gold {
+            width: 100%;
+            text-align: center;
+        }
+
+        .category-chips {
+            display: flex;
+            gap: 0.6rem;
+            overflow-x: auto;
+            padding-bottom: 5px;
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .chip {
+            padding: 6px 14px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 18px;
+            font-size: 0.78rem;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .chip.active {
+            background: var(--gold-main);
+            color: #000;
+            font-weight: 600;
+        }
+
+        /* Grid System */
         .materials-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+            width: 100%;
         }
 
         .pdf-card {
             background: var(--glass-bg);
             border: 1px solid var(--glass-border);
             border-radius: 16px;
-            padding: 1.8rem;
+            padding: 1.2rem;
             backdrop-filter: blur(15px);
-            transition: 0.3s;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
         }
 
-        .pdf-card:hover {
-            transform: translateY(-8px);
-            border-color: var(--gold-main);
-            box-shadow: 0 10px 30px rgba(0, 210, 255, 0.2);
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            border-radius: 10px;
+            border: 1px solid var(--glass-border);
+            margin-bottom: 1rem;
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%; border: 0;
         }
 
         .pdf-tag {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             color: var(--accent-blue);
             text-transform: uppercase;
             letter-spacing: 1px;
-            margin-bottom: 0.8rem;
+            margin-bottom: 0.5rem;
+            display: block;
         }
 
-        .pdf-card h4 { font-size: 1.2rem; margin-bottom: 0.8rem; }
-        .pdf-card p { font-size: 0.85rem; color: var(--text-gray); margin-bottom: 1.5rem; }
+        .pdf-card h4 { font-size: 1.1rem; margin-bottom: 0.5rem; line-height: 1.4; }
+        .pdf-card p { font-size: 0.82rem; color: var(--text-gray); margin-bottom: 1.2rem; line-height: 1.5; }
 
         .btn-download-pdf {
             width: 100%;
@@ -582,37 +507,58 @@
             background: rgba(212, 175, 55, 0.15);
             border: 1px solid var(--gold-main);
             color: var(--gold-light);
-            border-radius: 10px;
+            border-radius: 8px;
             cursor: pointer;
             font-weight: 600;
-            transition: 0.3s;
+            font-size: 0.85rem;
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
         }
 
-        .btn-download-pdf:hover {
-            background: var(--gold-main);
-            color: #000;
-        }
-
-        /* ==========================================
-           9. MOCK TEST SECTION
-           ========================================== */
+        /* Mock Test Section */
         .test-card {
             background: linear-gradient(135deg, rgba(212,175,55,0.05), rgba(0,0,0,0.6));
             border: 1px solid var(--glass-border);
             border-radius: 16px;
-            padding: 2rem;
+            padding: 1.2rem;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
+            flex-direction: column;
+            gap: 1rem;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        /* Contact Form */
+        .contact-box {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            padding: 1.5rem;
+            border-radius: 16px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .contact-form input, .contact-form textarea {
+            width: 100%;
+            padding: 0.8rem;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 0.85rem;
+            outline: none;
         }
 
         /* ==========================================
-           10. LOGIN / SIGNUP MODAL
+           5. MODALS & FOOTER
            ========================================== */
         .modal-overlay {
             position: fixed;
@@ -623,35 +569,81 @@
             justify-content: center;
             align-items: center;
             z-index: 2000;
+            padding: 1rem;
         }
 
         .modal-content {
             background: #0d061f;
             border: 1px solid var(--gold-main);
-            padding: 2.5rem;
-            border-radius: 24px;
-            max-width: 420px;
-            width: 90%;
+            padding: 1.8rem 1.2rem;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 380px;
             text-align: center;
             position: relative;
         }
 
-        .close-modal { position: absolute; top: 15px; right: 20px; font-size: 1.8rem; color: var(--text-gray); cursor: pointer; }
+        .close-modal { position: absolute; top: 10px; right: 15px; font-size: 1.6rem; color: var(--text-gray); cursor: pointer; }
 
         .modal-input {
             width: 100%;
-            padding: 0.9rem;
+            padding: 0.8rem;
             margin-bottom: 1rem;
             background: rgba(255,255,255,0.05);
             border: 1px solid rgba(255,255,255,0.15);
-            border-radius: 10px;
+            border-radius: 8px;
             color: #fff;
+            font-size: 0.85rem;
         }
 
-        @media (max-width: 992px) {
-            .hero-container { flex-direction: column; text-align: center; }
-            .hero-buttons { justify-content: center; }
-            .test-card { flex-direction: column; gap: 1rem; text-align: center; }
+        footer {
+            text-align: center;
+            padding: 2rem 1rem;
+            background: rgba(3, 0, 8, 0.95);
+            border-top: 1px solid var(--glass-border);
+            color: var(--text-gray);
+            font-size: 0.85rem;
+            width: 100%;
+        }
+
+        /* ==========================================
+           6. MEDIA QUERIES (DESKTOP / TABLET ADAPTATION)
+           ========================================== */
+        @media (min-width: 768px) {
+            header { padding: 1rem 7%; }
+            section { padding: 7rem 7% 4rem; }
+            
+            .hero-container {
+                flex-direction: row;
+                text-align: left;
+                justify-content: space-between;
+            }
+
+            .hero-text h1 { font-size: 3rem; }
+            .hero-buttons { justify-content: flex-start; }
+
+            .search-box {
+                flex-direction: row;
+            }
+
+            .search-box .btn-gold {
+                width: auto;
+            }
+
+            .materials-grid {
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            }
+
+            .test-card {
+                flex-direction: row;
+                justify-content: space-between;
+                text-align: left;
+            }
+
+            .contact-box {
+                max-width: 600px;
+                padding: 2.5rem;
+            }
         }
     </style>
 </head>
@@ -679,10 +671,9 @@
             <div class="brand-name">NE THUNIGA</div>
         </div>
 
-        <div style="display: flex; align-items: center; gap: 1.2rem;">
-            <button class="btn-login-nav" onclick="openLoginModal()">Student Login</button>
+        <div style="display: flex; align-items: center; gap: 0.8rem;">
+            <button class="btn-login-nav" onclick="openLoginModal()">Login</button>
             
-            <!-- 3-LINE ANIMATED HAMBURGER ICON -->
             <div class="hamburger" id="hamburger" onclick="toggleMenu()">
                 <span></span>
                 <span></span>
@@ -690,13 +681,12 @@
             </div>
         </div>
 
-        <!-- DROPDOWN MENU LINKS -->
         <ul class="nav-links" id="navLinks">
-            <li><a href="{% url 'home' %}">Home</a></li>
-            <li><a href="{% url 'mock_test' %}">Mock Tests</a></li>
-            <li><a href="{% url 'pdf_notes' %}">PDF Materials</a></li>
-            <li><a href="{% url 'videos' %}">Videos</a></li>
-            <li><a href="{% url 'about' %}">About Us</a></li>
+            <li><a href="{% url 'home' %}" onclick="toggleMenu()">Home</a></li>
+            <li><a href="{% url 'mock_test' %}" onclick="toggleMenu()">Mock Tests</a></li>
+            <li><a href="{% url 'pdf_notes' %}" onclick="toggleMenu()">PDF Materials</a></li>
+            <li><a href="{% url 'videos' %}" onclick="toggleMenu()">Videos</a></li>
+            <li><a href="{% url 'about' %}" onclick="toggleMenu()">About Us</a></li>
             <li><a href="#contact" onclick="toggleMenu()">Contact Us</a></li>
         </ul>
     </header>
@@ -713,7 +703,6 @@
                 </div>
             </div>
 
-            <!-- Telecaller / Counselor Avatar -->
             <div class="hero-telecaller-box">
                 <div class="telecaller-circle">
                     <img class="telecaller-avatar" src="{% static 'images/robot.jpeg' %}" alt="Avatar">
@@ -762,7 +751,7 @@
         
         <div class="search-section">
             <div class="search-box">
-                <input type="text" class="search-input" placeholder="Search PDF title or subject (e.g., Polity, History)...">
+                <input type="text" class="search-input" placeholder="Search PDF title or subject...">
                 <button class="btn-gold">Search</button>
             </div>
             <div class="category-chips">
@@ -775,7 +764,6 @@
             </div>
         </div>
 
-        <!-- PDF MATERIALS GRID -->
         <div class="materials-grid">
             <div class="pdf-card">
                 <div>
@@ -815,7 +803,7 @@
                     <span class="pdf-tag" style="color: var(--gold-light);">LIVE + RECORDED</span>
                     <h4>TNPSC Group 4 Master Class</h4>
                     <p>Daily live classes, 50+ mock tests, and printed study books.</p>
-                    <h3 style="color: var(--gold-light); margin: 1rem 0;">₹1,999 <span style="text-decoration: line-through; font-size: 0.9rem; color: #888;">₹4,999</span></h3>
+                    <h3 style="color: var(--gold-light); margin: 0.8rem 0;">₹1,999 <span style="text-decoration: line-through; font-size: 0.8rem; color: #888;">₹4,999</span></h3>
                 </div>
                 <button class="btn-gold" onclick="addToCart()">Enroll Now</button>
             </div>
@@ -825,7 +813,7 @@
                     <span class="pdf-tag" style="color: var(--gold-light);">FULL BATCH</span>
                     <h4>SSC & Railway (RRB) Complete Course</h4>
                     <p>Complete coaching for Maths, Reasoning, English & General Awareness.</p>
-                    <h3 style="color: var(--gold-light); margin: 1rem 0;">₹2,499 <span style="text-decoration: line-through; font-size: 0.9rem; color: #888;">₹5,999</span></h3>
+                    <h3 style="color: var(--gold-light); margin: 0.8rem 0;">₹2,499 <span style="text-decoration: line-through; font-size: 0.8rem; color: #888;">₹5,999</span></h3>
                 </div>
                 <button class="btn-gold" onclick="addToCart()">Enroll Now</button>
             </div>
@@ -838,14 +826,14 @@
         <div class="test-card">
             <div>
                 <h4>TNPSC Group 4 Full Length Mock Test 01</h4>
-                <p style="color: var(--text-gray); font-size: 0.9rem;">200 Questions • 3 Hours • Tamil & English</p>
+                <p style="color: var(--text-gray); font-size: 0.8rem; margin-top: 4px;">200 Questions • 3 Hours • Tamil & English</p>
             </div>
             <button class="btn-outline" onclick="alert('Starting Test...');">Start Test</button>
         </div>
         <div class="test-card">
             <div>
                 <h4>SSC CGL Tier-1 Mathematics Topic Test</h4>
-                <p style="color: var(--text-gray); font-size: 0.9rem;">25 Questions • 30 Mins • Instant Rank List</p>
+                <p style="color: var(--text-gray); font-size: 0.8rem; margin-top: 4px;">25 Questions • 30 Mins • Instant Rank List</p>
             </div>
             <button class="btn-outline" onclick="alert('Starting Test...');">Start Test</button>
         </div>
@@ -854,11 +842,11 @@
     <!-- CONTACT SECTION -->
     <section id="contact">
         <h2 class="section-title">Get In Touch</h2>
-        <div style="background: var(--glass-bg); border: 1px solid var(--glass-border); padding: 3rem; border-radius: 20px; max-width: 650px; margin: 0 auto; backdrop-filter: blur(15px);">
-            <form style="display: flex; flex-direction: column; gap: 1.2rem;" onsubmit="event.preventDefault(); alert('Thank you! Message sent.');">
-                <input type="text" placeholder="Full Name" style="padding: 1rem; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; color: #fff;" required>
-                <input type="email" placeholder="Email Address" style="padding: 1rem; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; color: #fff;" required>
-                <textarea rows="4" placeholder="Your Message" style="padding: 1rem; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; color: #fff;" required></textarea>
+        <div class="contact-box">
+            <form class="contact-form" onsubmit="event.preventDefault(); alert('Thank you! Message sent.');">
+                <input type="text" placeholder="Full Name" required>
+                <input type="email" placeholder="Email Address" required>
+                <textarea rows="4" placeholder="Your Message" required></textarea>
                 <button type="submit" class="btn-gold">Send Inquiry</button>
             </form>
         </div>
@@ -868,7 +856,7 @@
     <div class="modal-overlay" id="loginModal">
         <div class="modal-content">
             <span class="close-modal" onclick="closeLoginModal()">&times;</span>
-            <h3 style="color: var(--gold-light); margin-bottom: 1.5rem;">Student Login</h3>
+            <h3 style="color: var(--gold-light); margin-bottom: 1.2rem;">Student Login</h3>
             <form onsubmit="event.preventDefault(); alert('Login Successful!'); closeLoginModal();">
                 <input type="email" class="modal-input" placeholder="Email" required>
                 <input type="password" class="modal-input" placeholder="Password" required>
@@ -881,23 +869,19 @@
     <div class="modal-overlay" id="paymentModal">
         <div class="modal-content">
             <span class="close-modal" onclick="closePaymentModal()">&times;</span>
-            <h3 style="color: var(--gold-light); margin-bottom: 1rem;">Secure Checkout</h3>
-            <p style="color: var(--text-gray); margin-bottom: 1.5rem;">Pay securely using:</p>
-            <div style="background: rgba(255,255,255,0.05); padding: 1.2rem; border-radius: 12px; margin-bottom: 1.5rem;">
-                <p style="color: var(--gold-main);">UPI (GPay / PhonePe) | Credit & Debit Cards</p>
-            </div>
-            <button class="btn-gold" style="width: 100%;" onclick="alert('Redirecting to Razorpay Gateway...'); closePaymentModal();">Proceed to Pay</button>
+            <h3 style="color: var(--gold-light); margin-bottom: 0.8rem;">Secure Checkout</h3>
+            <p style="color: var(--text-gray); font-size: 0.85rem; margin-bottom: 1.2rem;">Pay securely using UPI or Cards</p>
+            <button class="btn-gold" style="width: 100%;" onclick="alert('Redirecting to Payment Gateway...'); closePaymentModal();">Proceed to Pay</button>
         </div>
     </div>
 
     <!-- FOOTER -->
-    <footer style="text-align: center; padding: 2.5rem; background: rgba(3, 0, 8, 0.95); border-top: 1px solid var(--glass-border); color: var(--text-gray);">
+    <footer>
         <p>&copy; Nethuniga Coaching Academy. All Rights Reserved.</p>
     </footer>
 
     <!-- JAVASCRIPT -->
     <script>
-        // --- 1. Canvas Stars Animation ---
         const canvas = document.getElementById('starsCanvas');
         const ctx = canvas.getContext('2d');
 
@@ -908,7 +892,7 @@
         window.addEventListener('resize', resizeCanvas);
         resizeCanvas();
 
-        const stars = Array.from({ length: 150 }, () => ({
+        const stars = Array.from({ length: 80 }, () => ({
             x: Math.random() * canvas.width,
             y: Math.random() * canvas.height,
             radius: Math.random() * 1.5 + 0.5,
@@ -933,62 +917,38 @@
         }
         animateStars();
 
-        // --- 2. Mouse Trail Follower ---
         const dot = document.getElementById('cursorDot');
         const follower = document.getElementById('cursorFollower');
 
-        window.addEventListener('mousemove', (e) => {
-            const { clientX: x, clientY: y } = e;
-            dot.style.left = `${x}px`;
-            dot.style.top = `${y}px`;
-            
-            follower.animate({
-                left: `${x}px`,
-                top: `${y}px`
-            }, { duration: 500, fill: "forwards" });
-        });
+        if (window.innerWidth >= 992) {
+            window.addEventListener('mousemove', (e) => {
+                const { clientX: x, clientY: y } = e;
+                if(dot) { dot.style.left = `${x}px`; dot.style.top = `${y}px`; }
+                if(follower) {
+                    follower.animate({ left: `${x}px`, top: `${y}px` }, { duration: 500, fill: "forwards" });
+                }
+            });
+        }
 
-        // --- 3. Hamburger Menu Toggle ---
         function toggleMenu() {
             document.getElementById('hamburger').classList.toggle('active');
             document.getElementById('navLinks').classList.toggle('active');
         }
 
-        // --- 4. Cart Logic ---
         let itemsCount = 0;
         function addToCart() {
             itemsCount++;
-            const cartBadge = document.getElementById('cartCount');
-            const cartIcon = document.getElementById('floatingCart');
-            
-            cartBadge.innerText = itemsCount;
-            cartIcon.classList.add('cart-fall-anim');
-            
-            setTimeout(() => {
-                cartIcon.classList.remove('cart-fall-anim');
-            }, 700);
+            document.getElementById('cartCount').innerText = itemsCount;
         }
 
-        // --- 5. Modal Controllers ---
-        function openLoginModal() {
-            document.getElementById('loginModal').style.display = 'flex';
-        }
-        function closeLoginModal() {
-            document.getElementById('loginModal').style.display = 'none';
-        }
-        function openPaymentModal() {
-            document.getElementById('paymentModal').style.display = 'flex';
-        }
-        function closePaymentModal() {
-            document.getElementById('paymentModal').style.display = 'none';
-        }
+        function openLoginModal() { document.getElementById('loginModal').style.display = 'flex'; }
+        function closeLoginModal() { document.getElementById('loginModal').style.display = 'none'; }
+        function openPaymentModal() { document.getElementById('paymentModal').style.display = 'flex'; }
+        function closePaymentModal() { document.getElementById('paymentModal').style.display = 'none'; }
 
-        // Close Modals when clicking outside content area
         window.onclick = function(event) {
-            const loginModal = document.getElementById('loginModal');
-            const paymentModal = document.getElementById('paymentModal');
-            if (event.target === loginModal) closeLoginModal();
-            if (event.target === paymentModal) closePaymentModal();
+            if (event.target === document.getElementById('loginModal')) closeLoginModal();
+            if (event.target === document.getElementById('paymentModal')) closePaymentModal();
         };
     </script>
 </body>

@@ -908,92 +908,82 @@
         window.addEventListener('resize', resizeCanvas);
         resizeCanvas();
 
-        let stars = [];
-        const numStars = 150;
-
-        for (let i = 0; i < numStars; i++) {
-            stars.push({
-                x: Math.random() * canvas.width,
-                y: Math.random() * canvas.height,
-                radius: Math.random() * 1.5 + 0.5,
-                opacity: Math.random(),
-                speed: Math.random() * 0.5 + 0.1
-            });
-        }
+        const stars = Array.from({ length: 150 }, () => ({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            radius: Math.random() * 1.5 + 0.5,
+            alpha: Math.random(),
+            speed: Math.random() * 0.5 + 0.2
+        }));
 
         function animateStars() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             stars.forEach(star => {
-                ctx.beginPath();
-                ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(255, 255, 255, ${star.opacity})`;
-                ctx.fill();
-
                 star.y -= star.speed;
                 if (star.y < 0) {
                     star.y = canvas.height;
                     star.x = Math.random() * canvas.width;
                 }
+                ctx.beginPath();
+                ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(255, 240, 153, ${star.alpha})`;
+                ctx.fill();
             });
             requestAnimationFrame(animateStars);
         }
         animateStars();
 
-        // --- 2. Cursor Trail Motion ---
-        const cursorDot = document.getElementById('cursorDot');
-        const cursorFollower = document.getElementById('cursorFollower');
+        // --- 2. Mouse Trail Follower ---
+        const dot = document.getElementById('cursorDot');
+        const follower = document.getElementById('cursorFollower');
 
         window.addEventListener('mousemove', (e) => {
-            cursorDot.style.left = e.clientX + 'px';
-            cursorDot.style.top = e.clientY + 'px';
+            const { clientX: x, clientY: y } = e;
+            dot.style.left = `${x}px`;
+            dot.style.top = `${y}px`;
             
-            setTimeout(() => {
-                cursorFollower.style.left = e.clientX + 'px';
-                cursorFollower.style.top = e.clientY + 'px';
-            }, 50);
+            follower.animate({
+                left: `${x}px`,
+                top: `${y}px`
+            }, { duration: 500, fill: "forwards" });
         });
 
         // --- 3. Hamburger Menu Toggle ---
         function toggleMenu() {
-            const hamburger = document.getElementById('hamburger');
-            const navLinks = document.getElementById('navLinks');
-            hamburger.classList.toggle('active');
-            navLinks.classList.toggle('active');
+            document.getElementById('hamburger').classList.toggle('active');
+            document.getElementById('navLinks').classList.toggle('active');
         }
 
-        // --- 4. Cart Functionality ---
-        let count = 0;
+        // --- 4. Cart Logic ---
+        let itemsCount = 0;
         function addToCart() {
-            count++;
-            const cartCountElement = document.getElementById('cartCount');
-            const floatingCart = document.getElementById('floatingCart');
-
-            cartCountElement.innerText = count;
+            itemsCount++;
+            const cartBadge = document.getElementById('cartCount');
+            const cartIcon = document.getElementById('floatingCart');
             
-            // Trigger drop-bounce effect
-            floatingCart.classList.remove('cart-fall-anim');
-            void floatingCart.offsetWidth; // Trigger reflow
-            floatingCart.classList.add('cart-fall-anim');
+            cartBadge.innerText = itemsCount;
+            cartIcon.classList.add('cart-fall-anim');
+            
+            setTimeout(() => {
+                cartIcon.classList.remove('cart-fall-anim');
+            }, 700);
         }
 
-        // --- 5. Modal Controls ---
+        // --- 5. Modal Controllers ---
         function openLoginModal() {
             document.getElementById('loginModal').style.display = 'flex';
         }
-
         function closeLoginModal() {
             document.getElementById('loginModal').style.display = 'none';
         }
-
         function openPaymentModal() {
             document.getElementById('paymentModal').style.display = 'flex';
         }
-
         function closePaymentModal() {
             document.getElementById('paymentModal').style.display = 'none';
         }
 
-        // Close modal when clicking outside content area
+        // Close Modals when clicking outside content area
         window.onclick = function(event) {
             const loginModal = document.getElementById('loginModal');
             const paymentModal = document.getElementById('paymentModal');
